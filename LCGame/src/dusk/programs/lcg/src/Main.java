@@ -2,6 +2,7 @@ package dusk.programs.lcg.src;
 
 import javax.swing.SwingUtilities;
 
+import dusk.programs.lcg.dungeon.Dungeon;
 import dusk.programs.lcg.graphic.GraphicsHandler;
 
 public class Main implements Runnable {
@@ -10,7 +11,7 @@ public class Main implements Runnable {
 	public static Thread thread;
 	
 	public enum Mode {
-		Menu, Game;
+		Menu, OverWorld, Dungeon;
 	}
 	
 	public static Mode mode = Mode.Menu;
@@ -20,7 +21,9 @@ public class Main implements Runnable {
 	}
 	
 	public Main() {
+		
 		GraphicsHandler.init();
+		//Dungeon.generateDungeon();
 		start();
 	}
 	

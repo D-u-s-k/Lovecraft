@@ -11,6 +11,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
@@ -20,8 +22,10 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import dusk.programs.lcg.dungeon.Room;
 import dusk.programs.lcg.src.Main;
 import dusk.programs.lcg.src.Main.Mode;
+import dusk.programs.lcg.src.StateHandler;
 
 public class GraphicsHandler {
 
@@ -39,18 +43,66 @@ public class GraphicsHandler {
 
 		switch (Main.mode) {
 		case Menu:
-			//There ARE no graphics you FOOL
+			// There ARE no graphics you FOOL
 			break;
-		case Game:
-			doGameGraphics();
+		case Dungeon:
+			doDungeonGraphics();
 			break;
 		}
-		
+
 		frame.repaint();
 	}
-	
-	public static void doGameGraphics() {
-		//TODO Game graphics
+
+	public static void doDungeonGraphics() {
+		drawRoom();
+		drawMap();
+	}
+
+	public static void drawRoom() {
+		double height = frame.getHeight() - 300;
+		double width = frame.getWidth();
+		double yScale = height / 100;
+		double xScale = yScale;
+		double xOffset = (width - 100 * xScale) / 2;
+		double yOffset = 0;
+
+		AffineTransform transform = new AffineTransform();
+		transform.translate(xOffset, yOffset);
+		System.out.println(xScale + ":" + yScale);
+		transform.scale(xScale, yScale);
+		g2d.transform(transform);
+
+		g2d.setColor(Color.GRAY);
+		g2d.fillRect(0, 0, 100, 100);
+
+		try {
+			g2d.transform(transform.createInverse());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void drawMap() {
+		// Map
+		int xOffset = 30;
+		int yOffset = 30;
+		int xScale = 10;
+		int yScale = 10;
+		for (Room r : StateHandler.d.rooms) {
+			g2d.fillRect(r.x * xScale + xOffset + 1, r.y * yScale + yOffset + 1, 8, 8);
+			if (r.doorUp) {
+				g2d.fillRect(r.x * xScale + xOffset + 3, r.y * yScale + yOffset, 4, 1);
+			}
+			if (r.doorDown) {
+				g2d.fillRect(r.x * xScale + xOffset + 3, r.y * yScale + yOffset + 9, 4, 1);
+			}
+			if (r.doorLeft) {
+				g2d.fillRect(r.x * xScale + xOffset, r.y * yScale + yOffset + 3, 1, 4);
+			}
+			if (r.doorRight) {
+				g2d.fillRect(r.x * xScale + xOffset + 9, r.y * yScale + yOffset + 3, 1, 4);
+			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -68,7 +120,7 @@ public class GraphicsHandler {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(backbuffer, 0, 0, graphicsPanel.getWidth(), graphicsPanel.getHeight(), graphicsPanel);
+				g.drawImage(backbuffer, 0, 0, 1920, 1080, graphicsPanel);
 			}
 		};
 		graphicsPanel.setLocation(0, 0);
@@ -95,7 +147,7 @@ public class GraphicsHandler {
 			mainMenuText.setFont(mainMenuText.getFont().deriveFont(Font.BOLD, 30));// big, bold
 			mainMenuContainer.add(mainMenuText);
 			menuPanel.add(mainMenuContainer);
-			JButton mainMenuJoin = new JButton("Join Server");
+			JButton mainMenuJoin = new JButton("Start Game");
 			mainMenuJoin.setPreferredSize(new Dimension(300, 100));
 			mainMenuJoin.setLayout(new LayoutManagerStrictSizes());
 			mainMenuJoin.setLocation(0, 100);
@@ -110,7 +162,8 @@ public class GraphicsHandler {
 					// topBarContainer.setVisible(true);
 					// chatContainer.setVisible(true);
 					mainMenuContainer.setVisible(false);
-					Main.mode = Mode.Game;
+					Main.mode = Mode.Dungeon;
+					StateHandler.handleState();
 				}
 			});
 		}
