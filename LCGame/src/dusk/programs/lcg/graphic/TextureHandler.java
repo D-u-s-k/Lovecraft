@@ -34,9 +34,9 @@ public class TextureHandler {
 	public static void handleTextures() {
 		loadTexture("Floor", 0, 0, 32, 32);
 		loadTexture("Door_Up", 0, 32, 32, 32);
-		loadTexture("Door_Left", 32, 32, 32, 32);
+		loadTexture("Door_Right", 32, 32, 32, 32);
 		loadTexture("Door_Down", 64, 32, 32, 32);
-		loadTexture("Door_Right", 96, 32, 32, 32);
+		loadTexture("Door_Left", 96, 32, 32, 32);
 	}
 
 }

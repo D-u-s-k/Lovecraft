@@ -78,10 +78,10 @@ public class GraphicsHandler {
 	public static void drawRoom() {
 		double height = frame.getHeight() - 300;
 		double width = frame.getWidth();
-		double yScale = height / 100;
+		double yScale = height / 120;
 		double xScale = yScale;
-		double xOffset = (width - 100 * xScale) / 2;
-		double yOffset = 0;
+		double xOffset = (width - 120 * xScale) / 2;
+		double yOffset = 10 * yScale;
 
 		AffineTransform transform = new AffineTransform();
 		transform.translate(xOffset, yOffset);
@@ -90,22 +90,22 @@ public class GraphicsHandler {
 		g2d.transform(transform);
 
 		//Floor
-		for (int y = 10; y < 90; y += 10) {
-			for (int x = 10; x < 90; x += 10) {
+		for (int y = 0; y < 100; y += 10) {
+			for (int x = 0; x < 100; x += 10) {
 				g2d.drawImage(TextureHandler.getTexture("Floor"), x, y, 10, 10, frame);
 			}
 		}
 		if (Character.currentRoom.doorDown) {
-			g2d.drawImage(TextureHandler.getTexture("Door_Down"), 45, 90, 10, 10, frame);
+			g2d.drawImage(TextureHandler.getTexture("Door_Down"), 45, 100, 10, 10, frame);
 		}
 		if (Character.currentRoom.doorUp) {
-			g2d.drawImage(TextureHandler.getTexture("Door_Up"), 45, 0, 10, 10, frame);
+			g2d.drawImage(TextureHandler.getTexture("Door_Up"), 45, -10, 10, 10, frame);
 		}
 		if (Character.currentRoom.doorLeft) {
-			g2d.drawImage(TextureHandler.getTexture("Door_Left"), 0, 45, 10, 10, frame);
+			g2d.drawImage(TextureHandler.getTexture("Door_Left"), -10, 45, 10, 10, frame);
 		}
 		if (Character.currentRoom.doorRight) {
-			g2d.drawImage(TextureHandler.getTexture("Door_Right"), 90, 45, 10, 10, frame);
+			g2d.drawImage(TextureHandler.getTexture("Door_Right"), 100, 45, 10, 10, frame);
 		}
 
 		try {
