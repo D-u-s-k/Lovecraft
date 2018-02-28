@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 
 import dusk.programs.lcg.dungeon.Dungeon;
 import dusk.programs.lcg.graphic.GraphicsHandler;
+import dusk.programs.lcg.graphic.TextureHandler;
 
 public class Main implements Runnable {
 	
@@ -21,9 +22,9 @@ public class Main implements Runnable {
 	}
 	
 	public Main() {
-		
+		TextureHandler.init();
+		TextureHandler.handleTextures();
 		GraphicsHandler.init();
-		//Dungeon.generateDungeon();
 		start();
 	}
 	

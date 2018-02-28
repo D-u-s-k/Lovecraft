@@ -105,6 +105,7 @@ public class Dungeon {
 		}
 
 		Room startRoomRoom = new Room(DungeonType.Normal, 0, xStart, yStart);
+		startRoomRoom.visited =  true;
 		rooms.add(startRoomRoom);
 		generateRoom(xStart, yStart);
 		Character.currentRoom = startRoomRoom;

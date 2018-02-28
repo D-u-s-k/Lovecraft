@@ -12,7 +12,6 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
@@ -22,6 +21,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import dusk.programs.lcg.dungeon.Character;
 import dusk.programs.lcg.dungeon.Room;
 import dusk.programs.lcg.src.Main;
 import dusk.programs.lcg.src.Main.Mode;
@@ -48,9 +48,26 @@ public class GraphicsHandler {
 		case Dungeon:
 			doDungeonGraphics();
 			break;
+		case OverWorld:
+			break;
+		default:
+			break;
 		}
 
 		frame.repaint();
+	}
+	
+	public static void doOverworldGraphics() {
+		drawOverworldMenu();
+		drawOverworldMap();
+	}
+	
+	public static void drawOverworldMenu() {
+		
+	}
+	
+	public static void drawOverworldMap() {
+		
 	}
 
 	public static void doDungeonGraphics() {
@@ -72,8 +89,24 @@ public class GraphicsHandler {
 		transform.scale(xScale, yScale);
 		g2d.transform(transform);
 
-		g2d.setColor(Color.GRAY);
-		g2d.fillRect(0, 0, 100, 100);
+		//Floor
+		for (int y = 10; y < 90; y += 10) {
+			for (int x = 10; x < 90; x += 10) {
+				g2d.drawImage(TextureHandler.getTexture("Floor"), x, y, 10, 10, frame);
+			}
+		}
+		if (Character.currentRoom.doorDown) {
+			g2d.drawImage(TextureHandler.getTexture("Door_Down"), 45, 90, 10, 10, frame);
+		}
+		if (Character.currentRoom.doorUp) {
+			g2d.drawImage(TextureHandler.getTexture("Door_Up"), 45, 0, 10, 10, frame);
+		}
+		if (Character.currentRoom.doorLeft) {
+			g2d.drawImage(TextureHandler.getTexture("Door_Left"), 0, 45, 10, 10, frame);
+		}
+		if (Character.currentRoom.doorRight) {
+			g2d.drawImage(TextureHandler.getTexture("Door_Right"), 90, 45, 10, 10, frame);
+		}
 
 		try {
 			g2d.transform(transform.createInverse());
@@ -85,22 +118,35 @@ public class GraphicsHandler {
 	public static void drawMap() {
 		// Map
 		int xOffset = 30;
-		int yOffset = 30;
-		int xScale = 10;
-		int yScale = 10;
+		int yOffset = 800;
+		int xScale = 15;
+		int yScale = 15;
+		
+		// Draw grid
+		g2d.setColor(Color.GRAY);
+		for (int y = 0; y < 10; y++) {
+			for (int x = 0; x < 10; x++) {
+				g2d.fillRect(x * xScale + xOffset + 1, y * yScale + yOffset + 1, 8, 8);
+			}
+		}
+		
+		//Draw visited rooms
+		g2d.setColor(Color.WHITE);
 		for (Room r : StateHandler.d.rooms) {
-			g2d.fillRect(r.x * xScale + xOffset + 1, r.y * yScale + yOffset + 1, 8, 8);
-			if (r.doorUp) {
-				g2d.fillRect(r.x * xScale + xOffset + 3, r.y * yScale + yOffset, 4, 1);
-			}
-			if (r.doorDown) {
-				g2d.fillRect(r.x * xScale + xOffset + 3, r.y * yScale + yOffset + 9, 4, 1);
-			}
-			if (r.doorLeft) {
-				g2d.fillRect(r.x * xScale + xOffset, r.y * yScale + yOffset + 3, 1, 4);
-			}
-			if (r.doorRight) {
-				g2d.fillRect(r.x * xScale + xOffset + 9, r.y * yScale + yOffset + 3, 1, 4);
+			if (r.visited) {
+				g2d.fillRect(r.x * xScale + xOffset + 1, r.y * yScale + yOffset + 1, 8, 8);
+				if (r.doorUp) {
+					g2d.fillRect(r.x * xScale + xOffset + 3, r.y * yScale + yOffset, 4, 1);
+				}
+				if (r.doorDown) {
+					g2d.fillRect(r.x * xScale + xOffset + 3, r.y * yScale + yOffset + 9, 4, 1);
+				}
+				if (r.doorLeft) {
+					g2d.fillRect(r.x * xScale + xOffset, r.y * yScale + yOffset + 3, 1, 4);
+				}
+				if (r.doorRight) {
+					g2d.fillRect(r.x * xScale + xOffset + 9, r.y * yScale + yOffset + 3, 1, 4);
+				}
 			}
 		}
 	}

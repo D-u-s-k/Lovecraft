@@ -8,6 +8,8 @@ import dusk.programs.lcg.monster.Monster;
 
 public class Room {
 	
+	public boolean visited = false;
+	
 	public enum DungeonType {
 		Normal, Boss
 	}
